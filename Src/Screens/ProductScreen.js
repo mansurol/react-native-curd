@@ -6,23 +6,19 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
 import Routes from "../Utilities/Routes";
+import { useGetAddProductQuery } from "../Redux/Api/ProductApi";
 
-const data = [
-  {
-    Id: "1",
-    Title: "this my first post",
-  },
-  {
-    Id: "2",
-    Title: "this my second post",
-  },
-];
 export default function ProductScreen({ navigation }) {
+  const { data, isSuccess, refatch } = useGetAddProductQuery();
+  const [datas, setDatas] = useState();
+  useEffect(() => {
+    data?.length > 0 && setDatas(data);
+  }, [isSuccess]);
   const renderItem = ({ item }) => {
-    console.log(item);
+    //console.log(item);
 
     return (
       <Pressable
@@ -37,7 +33,11 @@ export default function ProductScreen({ navigation }) {
             <View
               style={styles.circle} //item.completed ? styles.circleDone : item.completed ? styles.TitleBlur :
             />
-            <Text style={styles.title}>{item.Title}</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate(Routes.PRODUCTS_STATUS)}
+            >
+              <Text style={styles.title}>{item.name}</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -49,7 +49,7 @@ export default function ProductScreen({ navigation }) {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "white" }}>Delete</Text>
+          <Text style={{ textAlign: "center", color: "black" }}>Delete</Text>
         </TouchableOpacity>
       </Pressable>
     );
@@ -60,9 +60,9 @@ export default function ProductScreen({ navigation }) {
         Products List
       </Text>
       <FlatList
-        data={data}
+        data={datas}
         renderItem={renderItem}
-        keyExtractor={(item) => item.Id.toString()}
+        keyExtractor={(item) => item.Id}
         // onRefresh={refetch}
         // refreshing={isFetching}
       />
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   title: {
-    fontSize: 16,
+    fontSize: 12,
     color: "black",
   },
   titleDone: {

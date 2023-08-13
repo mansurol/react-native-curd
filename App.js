@@ -3,13 +3,17 @@ import { StyleSheet, Text, View } from "react-native";
 import StackNavigation from "./Src/Navigation/StackNavigation";
 import { NavigationContainer } from "@react-navigation/native";
 import "react-native-gesture-handler";
+import { Provider } from "react-redux";
+import store from "./Src/Redux/Store";
 export default function App() {
   return (
     <View style={styles.container}>
-      <NavigationContainer>
-        <StackNavigation />
-        <StatusBar style="auto" />
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <StackNavigation />
+          <StatusBar style="auto" />
+        </NavigationContainer>
+      </Provider>
     </View>
   );
 }
